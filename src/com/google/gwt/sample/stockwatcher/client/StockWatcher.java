@@ -1,5 +1,7 @@
 package com.google.gwt.sample.stockwatcher.client;
 
+import java.util.ArrayList;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -26,6 +28,7 @@ public class StockWatcher implements EntryPoint {
 	  private TextBox newSymbolTextBox = new TextBox();
 	  private Button addStockButton = new Button("Add");
 	  private Label lastUpdatedLabel = new Label();
+      private ArrayList<String> stocks = new ArrayList<String>();
 
 	  
 	  /**
@@ -90,6 +93,29 @@ public class StockWatcher implements EntryPoint {
 			newSymbolTextBox.selectAll();
 			return;
 		}
+		
+		if ( stocks.contains( symbol)) 
+			return;
+		
+		int row = stocksFlexTable.getRowCount();
+		stocks.add(symbol);
+		stocksFlexTable.setText(row, 0, symbol);
+		
+		
+		
+		Button removeStockButton = new Button("x");
+		removeStockButton.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				int removedIndex = stocks.indexOf(symbol);
+				stocks.remove(removedIndex);
+				stocksFlexTable.removeRow(removedIndex + 1);
+			}
+		});
+		
+		
+		stocksFlexTable.setWidget(row, 3, removeStockButton);
 		newSymbolTextBox.setText("");
 	}
 }
